@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = "sqlserver://<ip>:<port>;database=<dbname>;integratedSecurity=false;username=<username>;password=<password>;trustServerCertificate=true;"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  surname   String
+  email     String   @unique
+  country   String
+  mobile    String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -8,7 +8,18 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy and install dependencies
+# Install SQL Server ODBC driver and dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    apt-transport-https \
+    curl \
+    gnupg \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get update && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
+    msodbcsql17 unixodbc-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy and install Python dependencies
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
